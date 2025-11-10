@@ -90,7 +90,7 @@ public class ManageWallpaperModule extends ReactContextBaseJavaModule {
                 } else if (type.equals("lock")) {
                     wallpaperManager.setStream(stream, null, false, WallpaperManager.FLAG_LOCK);
                 } else {
-                    wallpaperManager.setStream(stream, null, false, 0);
+                    wallpaperManager.setStream(stream, null, false, WallpaperManager.FLAG_LOCK | WallpaperManager.FLAG_SYSTEM);
                 }
             } else {
                 wallpaperManager.setStream(stream);
