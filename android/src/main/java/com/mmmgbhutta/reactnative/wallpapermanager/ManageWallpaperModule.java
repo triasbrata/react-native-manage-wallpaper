@@ -49,7 +49,7 @@ public class ManageWallpaperModule extends ReactContextBaseJavaModule {
         mApplicationContext = getReactApplicationContext();
 
         wallpaperManager = WallpaperManager.getInstance(mApplicationContext);
-        mResourceDrawableIdHelper = new ResourceDrawableIdHelper();
+        mResourceDrawableIdHelper = ResourceDrawableIdHelper.getInstance();
     }
 
     @Override
