@@ -49,6 +49,7 @@ public class ManageWallpaperModule extends ReactContextBaseJavaModule {
         mApplicationContext = getReactApplicationContext();
 
         wallpaperManager = WallpaperManager.getInstance(mApplicationContext);
+        mResourceDrawableIdHelper = new ResourceDrawableIdHelper();
     }
 
     @Override
@@ -73,6 +74,15 @@ public class ManageWallpaperModule extends ReactContextBaseJavaModule {
         final String source = params.hasKey("uri") ? params.getString("uri") : null;
         ReadableMap headers = params.hasKey("headers") ? params.getMap("headers") : null;
 
+        if (source == null) {
+            WritableMap map = Arguments.createMap();
+            map.putString("status", "error");
+            map.putString("msg", "Source URI is required");
+            map.putString("url", "");
+            callback.invoke(map);
+            return;
+        }
+
         if (rctCallback != null) {
             WritableMap map = Arguments.createMap();
 
@@ -91,10 +101,11 @@ public class ManageWallpaperModule extends ReactContextBaseJavaModule {
 
         if (mCurrentActivity == null) {
             sendMessage("error", "CurrentActivity is null", source);
+            return;
         }
 
         //handle base64
-        if ("data:image/png;base64,".startsWith(source)) {
+        if (source != null && source.startsWith("data:image/")) {
             mCurrentActivity.runOnUiThread(new Runnable() {
                 public void run() {
                     Util.assertMainThread();
@@ -135,7 +146,7 @@ public class ManageWallpaperModule extends ReactContextBaseJavaModule {
         if (mUri == null) {
             ImageSource is = new ImageSource(this.getReactApplicationContext(), source);
             if (is.isResource()) {
-                int resId = mResourceDrawableIdHelper.getInstance().getResourceDrawableId(this.getReactApplicationContext(), source);
+                int resId = mResourceDrawableIdHelper.getResourceDrawableId(this.getReactApplicationContext(), source);
                 Bitmap mBitmap = BitmapFactory.decodeResource(this.getReactApplicationContext().getResources(), resId);
 
                 try {
